@@ -1,9 +1,13 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRecoilValue } from 'recoil';
+import { modalState } from '../atoms/modelAtom';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
+import Modal from '../components/Modal';
 import Row from '../components/Row';
+import useAuth from '../hooks/useAuth';
 import { Movie } from '../typing';
 import requests from '../utils/requests';
 
@@ -28,8 +32,13 @@ const Home: NextPage<Props> = ({
   topRated,
   trendingNow,
 }) => {
+  const { loading } = useAuth();
+  const showModal = useRecoilValue(modalState);
+
+  if (loading) return null;
+
   return (
-    <div className='relative h-screen bg-gradient-to-b from-gray-900/10 to-[#010511]'>
+    <div className='relative h-screen bg-gradient-to-b'>
       <Head>
         <title>Home - Netflix</title>
         <link rel='icon' href='/favicon.ico' />
@@ -48,6 +57,7 @@ const Home: NextPage<Props> = ({
           <Row title='Documentaries' movies={documentaries} />
         </section>
       </main>
+      {showModal && <Modal />}
     </div>
   );
 };
